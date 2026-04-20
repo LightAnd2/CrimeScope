@@ -6,7 +6,7 @@ Search, filter, and explore live crime incident data across major U.S. cities on
 
 [Explore the code »](https://github.com/LightAnd2/CrimeScope)
 
-[View Demo](#) · [Report Bug](https://github.com/LightAnd2/CrimeScope/issues) · [Request Feature](https://github.com/LightAnd2/CrimeScope/issues)
+[View Demo](https://crime-scope.vercel.app) · [Report Bug](https://github.com/LightAnd2/CrimeScope/issues) · [Request Feature](https://github.com/LightAnd2/CrimeScope/issues)
 
 ---
 
