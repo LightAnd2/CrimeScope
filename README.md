@@ -19,7 +19,6 @@ Search, filter, and explore live crime incident data across major U.S. cities on
   - [Installation](#installation)
 - [Usage](#usage)
 - [Project Structure](#project-structure)
-- [Roadmap](#roadmap)
 - [Contact](#contact)
 - [Acknowledgments](#acknowledgments)
 
@@ -150,16 +149,6 @@ CrimeScope/
 ├── package.json
 └── .gitignore
 ```
-
----
-
-## Roadmap
-
-- Add more cities (Seattle, DC, Philadelphia, Portland)
-- Day-of-week breakdown chart
-- Neighborhood ranking panel
-- Export filtered incidents as CSV
-- Deploy public demo
 
 ---
 
