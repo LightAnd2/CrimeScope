@@ -9,7 +9,7 @@ const PRESETS = [
   { label: '60d', days: 60 },
 ]
 
-export default function Navbar() {
+export default function Navbar({ onToggleSidebar, sidebarOpen }) {
   const dateRange = useCrimeStore(s => s.dateRange)
   const setDateRange = useCrimeStore(s => s.setDateRange)
   const loading = useCrimeStore(s => s.loading)
@@ -35,6 +35,31 @@ export default function Navbar() {
       gap: '0',
       flexShrink: 0,
     }}>
+      <button
+        onClick={onToggleSidebar}
+        style={{
+          width: '32px',
+          height: '32px',
+          border: '1px solid var(--border)',
+          borderRadius: '4px',
+          background: 'transparent',
+          color: 'var(--text-muted)',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '4px',
+          padding: '6px',
+          flexShrink: 0,
+          marginRight: '12px',
+        }}
+        title={sidebarOpen ? 'Hide sidebar' : 'Show sidebar'}
+      >
+        <span style={{ display: 'block', width: '14px', height: '1.5px', background: 'currentColor', borderRadius: '1px' }} />
+        <span style={{ display: 'block', width: '14px', height: '1.5px', background: 'currentColor', borderRadius: '1px' }} />
+        <span style={{ display: 'block', width: '14px', height: '1.5px', background: 'currentColor', borderRadius: '1px' }} />
+      </button>
+
       <div style={{ fontWeight: 700, fontSize: '14px', letterSpacing: '-0.3px', color: '#fff', marginRight: '20px', whiteSpace: 'nowrap' }}>
         Crime<span style={{ color: '#ff3333' }}>Scope</span>
       </div>

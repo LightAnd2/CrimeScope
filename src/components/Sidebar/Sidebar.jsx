@@ -10,25 +10,18 @@ const TABS = [
   { id: 'chart', label: 'Chart', icon: '▦' },
 ]
 
-export default function Sidebar() {
+export default function Sidebar({ isOpen, onClose }) {
   const [tab, setTab] = useState('filters')
   const viewMode = useCrimeStore(s => s.viewMode)
   const setViewMode = useCrimeStore(s => s.setViewMode)
 
   return (
-    <div style={{
-      width: 'var(--sidebar-w)',
-      background: 'var(--surface)',
-      borderRight: '1px solid var(--border)',
-      display: 'flex',
-      flexDirection: 'column',
-      flexShrink: 0,
-      overflow: 'hidden',
-    }}>
+    <div className={`sidebar${isOpen ? '' : ' sidebar-closed'}`}>
       {/* Tab bar */}
       <div style={{
         display: 'flex',
         borderBottom: '1px solid var(--border)',
+        flexShrink: 0,
       }}>
         {TABS.map(t => (
           <button
@@ -65,6 +58,7 @@ export default function Sidebar() {
       <div style={{
         borderTop: '1px solid var(--border)',
         padding: '10px 12px',
+        flexShrink: 0,
       }}>
         <button
           onClick={() => setViewMode(viewMode === 'pins' ? 'heatmap' : 'pins')}
