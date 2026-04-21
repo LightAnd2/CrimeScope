@@ -9,7 +9,7 @@ import useCrimeStore from './store/crimeStore.js'
 
 export default function App() {
   const selectedIncident = useCrimeStore(s => s.selectedIncident)
-  const [sidebarOpen, setSidebarOpen] = useState(true)
+  const [sidebarOpen, setSidebarOpen] = useState(() => window.innerWidth > 768)
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>

@@ -16,7 +16,6 @@ export default function Navbar({ onToggleSidebar, sidebarOpen }) {
   const count = useCrimeStore(s => s.incidents.length)
   const dataAsOf = useCrimeStore(s => s.dataAsOf)
 
-  // Use dataAsOf as the reference date if data portal is lagged
   const refDate = dataAsOf ?? new Date()
   const isStale = dataAsOf && differenceInDays(new Date(), dataAsOf) > 10
 
@@ -25,7 +24,7 @@ export default function Navbar({ onToggleSidebar, sidebarOpen }) {
   )
 
   return (
-    <nav style={{
+    <nav className="navbar" style={{
       height: 'var(--navbar-h)',
       background: 'var(--surface)',
       borderBottom: '1px solid var(--border)',
@@ -34,6 +33,7 @@ export default function Navbar({ onToggleSidebar, sidebarOpen }) {
       padding: '0 20px',
       gap: '0',
       flexShrink: 0,
+      overflow: 'hidden',
     }}>
       <button
         onClick={onToggleSidebar}
@@ -60,7 +60,7 @@ export default function Navbar({ onToggleSidebar, sidebarOpen }) {
         <span style={{ display: 'block', width: '14px', height: '1.5px', background: 'currentColor', borderRadius: '1px' }} />
       </button>
 
-      <div style={{ fontWeight: 700, fontSize: '14px', letterSpacing: '-0.3px', color: '#fff', marginRight: '20px', whiteSpace: 'nowrap' }}>
+      <div style={{ fontWeight: 700, fontSize: '14px', letterSpacing: '-0.3px', color: '#fff', marginRight: '16px', whiteSpace: 'nowrap' }}>
         Crime<span style={{ color: '#ff3333' }}>Scope</span>
       </div>
 
@@ -76,7 +76,7 @@ export default function Navbar({ onToggleSidebar, sidebarOpen }) {
         <button key={p.label}
           onClick={() => setDateRange({ start: subDays(refDate, p.days), end: refDate })}
           style={{
-            padding: '0 12px',
+            padding: '0 10px',
             height: 'var(--navbar-h)',
             border: 'none',
             borderBottom: activePreset?.days === p.days ? '2px solid #fff' : '2px solid transparent',
@@ -85,6 +85,7 @@ export default function Navbar({ onToggleSidebar, sidebarOpen }) {
             fontSize: '12px',
             fontWeight: activePreset?.days === p.days ? 600 : 400,
             cursor: 'pointer',
+            flexShrink: 0,
           }}>
           {p.label}
         </button>
@@ -93,24 +94,24 @@ export default function Navbar({ onToggleSidebar, sidebarOpen }) {
       <div style={{ flex: 1 }} />
 
       {isStale && (
-        <span style={{ fontSize: '10px', color: '#f90', marginRight: '12px', whiteSpace: 'nowrap' }}>
+        <span className="nav-stale" style={{ fontSize: '10px', color: '#f90', marginRight: '12px', whiteSpace: 'nowrap' }}>
           Data as of {format(dataAsOf, 'MMM d, yyyy')}
         </span>
       )}
 
-      <span style={{ fontSize: '11px', color: 'var(--text-muted)', marginRight: '16px', whiteSpace: 'nowrap' }}>
+      <span className="nav-date-range" style={{ fontSize: '11px', color: 'var(--text-muted)', marginRight: '16px', whiteSpace: 'nowrap' }}>
         {format(dateRange.start, 'MMM d')} – {format(dateRange.end, 'MMM d')}
       </span>
 
-      <Divider />
+      <Divider className="nav-divider-hide" />
 
-      <span style={{ fontSize: '12px', color: loading ? 'var(--text-muted)' : '#fff', marginLeft: '16px', whiteSpace: 'nowrap' }}>
-        {loading ? 'Loading...' : `${count.toLocaleString()} incidents`}
+      <span style={{ fontSize: '12px', color: loading ? 'var(--text-muted)' : '#fff', marginLeft: '12px', whiteSpace: 'nowrap' }}>
+        {loading ? '...' : `${count.toLocaleString()}`}
       </span>
     </nav>
   )
 }
 
-function Divider() {
-  return <div style={{ width: '1px', height: '16px', background: 'var(--border)', margin: '0 8px' }} />
+function Divider({ className = '' }) {
+  return <div className={className} style={{ width: '1px', height: '16px', background: 'var(--border)', margin: '0 8px' }} />
 }
