@@ -42,6 +42,8 @@ CrimeScope is a front-end crime data visualization app that pulls live incident 
 - Live data from Chicago, NYC, Los Angeles, San Francisco, Dallas, and Detroit
 - City-aware date anchoring — portals that lag months behind auto-adjust so filters always work
 - Filter by crime category and hour of day
+- Collapsible sidebar with hamburger toggle — hides on demand to maximize map space
+- Mobile-responsive layout with sidebar as a slide-in overlay drawer on small screens
 - Sidebar with incident count, crime type breakdown chart, and neighborhood stats
 - Click any incident for a detail card: type, description, address, date/time, case number
 - Stale data indicator when a city portal is behind real time
