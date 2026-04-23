@@ -137,7 +137,8 @@ input, select {
 
   .nav-date-range,
   .nav-stale,
-  .nav-divider-hide {
+  .nav-divider-hide,
+  .nav-count {
     display: none !important;
   }
 

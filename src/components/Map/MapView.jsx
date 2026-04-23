@@ -9,13 +9,13 @@ import { CITIES } from '../../constants/cities.js'
 function MapController() {
   const map = useMap()
   const cityId = useCrimeStore(s => s.city)
+  const recenterKey = useCrimeStore(s => s.recenterKey)
   const mountedRef = useRef(false)
 
   useEffect(() => {
     const city = CITIES[cityId]
     if (!city) return
 
-    // Stop any in-progress animation before moving
     map.stop()
 
     if (mountedRef.current) {
@@ -26,7 +26,7 @@ function MapController() {
     }
 
     return () => { map.stop() }
-  }, [cityId, map])
+  }, [cityId, recenterKey, map])
 
   return null
 }

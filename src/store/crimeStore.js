@@ -14,10 +14,12 @@ const useCrimeStore = create((set) => ({
     timeRange: [0, 23],
   },
   viewMode: 'pins',
+  recenterKey: 0,
   incidents: [],
   loading: false,
 
   setCity: (cityId) => set({ city: cityId, selectedIncident: null, incidents: [], dataAsOf: null }),
+  triggerRecenter: () => set(s => ({ recenterKey: s.recenterKey + 1 })),
   selectIncident: (incident) => set({ selectedIncident: incident }),
   clearSelectedIncident: () => set({ selectedIncident: null }),
   setDateRange: (dateRange) => set({ dateRange }),

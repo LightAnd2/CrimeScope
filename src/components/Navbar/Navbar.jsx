@@ -15,6 +15,7 @@ export default function Navbar({ onToggleSidebar, sidebarOpen }) {
   const loading = useCrimeStore(s => s.loading)
   const count = useCrimeStore(s => s.incidents.length)
   const dataAsOf = useCrimeStore(s => s.dataAsOf)
+  const triggerRecenter = useCrimeStore(s => s.triggerRecenter)
 
   const refDate = dataAsOf ?? new Date()
   const isStale = dataAsOf && differenceInDays(new Date(), dataAsOf) > 10
@@ -33,7 +34,6 @@ export default function Navbar({ onToggleSidebar, sidebarOpen }) {
       padding: '0 20px',
       gap: '0',
       flexShrink: 0,
-      overflow: 'hidden',
     }}>
       <button
         onClick={onToggleSidebar}
@@ -60,9 +60,13 @@ export default function Navbar({ onToggleSidebar, sidebarOpen }) {
         <span style={{ display: 'block', width: '14px', height: '1.5px', background: 'currentColor', borderRadius: '1px' }} />
       </button>
 
-      <div style={{ fontWeight: 700, fontSize: '14px', letterSpacing: '-0.3px', color: '#fff', marginRight: '16px', whiteSpace: 'nowrap' }}>
+      <button
+        onClick={triggerRecenter}
+        title="Re-center map"
+        style={{ fontWeight: 700, fontSize: '14px', letterSpacing: '-0.3px', color: '#fff', marginRight: '16px', whiteSpace: 'nowrap', background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}
+      >
         Crime<span style={{ color: '#ff3333' }}>Scope</span>
-      </div>
+      </button>
 
       <Divider />
 
@@ -105,8 +109,8 @@ export default function Navbar({ onToggleSidebar, sidebarOpen }) {
 
       <Divider className="nav-divider-hide" />
 
-      <span style={{ fontSize: '12px', color: loading ? 'var(--text-muted)' : '#fff', marginLeft: '12px', whiteSpace: 'nowrap' }}>
-        {loading ? '...' : `${count.toLocaleString()}`}
+      <span className="nav-count" style={{ fontSize: '12px', color: loading ? 'var(--text-muted)' : '#fff', marginLeft: '12px', whiteSpace: 'nowrap' }}>
+        {loading ? '...' : `${count.toLocaleString()} incidents`}
       </span>
     </nav>
   )
