@@ -12,7 +12,7 @@
   --text: #e8e8e8;
   --text-muted: #888888;
   --accent: #ffffff;
-  --navbar-h: 64px;
+  --navbar-h: 78px;
   --sidebar-w: 300px;
 }
 
@@ -104,6 +104,22 @@ input, select {
   z-index: 60;
 }
 
+.nav-hamburger {
+  margin-right: 16px;
+}
+
+.nav-logo {
+  display: block;
+  height: 62px;
+  width: auto;
+  max-width: 280px;
+  object-fit: contain;
+}
+
+.nav-logo-text {
+  display: none;
+}
+
 /* Filter items — hidden by default, shown only on mobile */
 .filter-mobile-only {
   display: none;
@@ -155,12 +171,25 @@ input, select {
     display: none !important;
   }
 
-  /* CrimeScope fills the middle on mobile */
+  /* CrimeScope truly centered on mobile */
   .nav-title {
-    flex: 1;
-    text-align: center;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
     margin: 0 !important;
     font-size: 20px !important;
+  }
+
+  .nav-logo {
+    display: none;
+  }
+
+  .nav-logo-text {
+    display: inline;
+    font-size: 22px;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: -0.3px;
   }
 
   /* Show filter mobile-only sections on mobile */
@@ -169,12 +198,16 @@ input, select {
   }
 
   .nav-count-mobile {
-    display: inline;
+    display: none;
   }
 
   .navbar {
-    padding: 0 12px !important;
+    padding: 0 16px !important;
     gap: 0;
+  }
+
+  .nav-hamburger {
+    margin-right: 8px;
   }
 }
 

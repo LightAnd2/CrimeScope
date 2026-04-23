@@ -37,6 +37,7 @@ export default function Navbar({ onToggleSidebar, sidebarOpen }) {
     }}>
       <button
         onClick={onToggleSidebar}
+        className="nav-hamburger"
         style={{
           width: '38px',
           height: '38px',
@@ -51,7 +52,6 @@ export default function Navbar({ onToggleSidebar, sidebarOpen }) {
           gap: '5px',
           padding: '8px',
           flexShrink: 0,
-          marginRight: '16px',
         }}
         title={sidebarOpen ? 'Hide sidebar' : 'Show sidebar'}
       >
@@ -64,9 +64,26 @@ export default function Navbar({ onToggleSidebar, sidebarOpen }) {
         className="nav-title"
         onClick={triggerRecenter}
         title="Re-center map"
-        style={{ fontWeight: 800, fontSize: '30px', letterSpacing: '-1px', color: '#fff', marginRight: '16px', whiteSpace: 'nowrap', background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}
+        style={{
+          marginRight: '20px',
+          whiteSpace: 'nowrap',
+          background: 'none',
+          border: 'none',
+          padding: 0,
+          cursor: 'pointer',
+          display: 'flex',
+          alignItems: 'center',
+          flexShrink: 0,
+        }}
       >
-        Crime<span style={{ color: '#ff3333' }}>Scope</span>
+        <img
+          className="nav-logo"
+          src="/CrimeScope_Logo_Cropped.png"
+          alt="CrimeScope"
+        />
+        <span className="nav-logo-text">
+          Crime<span style={{ color: '#e53e3e' }}>Scope</span>
+        </span>
       </button>
 
       <Divider className="nav-city-divider" />
@@ -115,7 +132,7 @@ export default function Navbar({ onToggleSidebar, sidebarOpen }) {
       <span className="nav-count-desktop" style={{ fontSize: '14px', color: loading ? 'var(--text-muted)' : '#fff', marginLeft: '16px', whiteSpace: 'nowrap' }}>
         {loading ? '...' : `${count.toLocaleString()} incidents`}
       </span>
-      <span className="nav-count-mobile" style={{ fontSize: '12px', color: loading ? 'var(--text-muted)' : '#fff', whiteSpace: 'nowrap' }}>
+      <span className="nav-count-mobile" style={{ fontSize: '12px', color: loading ? 'var(--text-muted)' : '#fff', whiteSpace: 'nowrap', flexShrink: 0 }}>
         {loading ? '...' : count.toLocaleString()}
       </span>
     </nav>
