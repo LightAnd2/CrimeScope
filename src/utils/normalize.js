@@ -1,4 +1,4 @@
-import { normalizeType } from '../constants/crimeTypes.js'
+import { normalizeType, getSeverity } from '../constants/crimeTypes.js'
 import { getChicagoNeighborhood } from '../constants/chicagoAreas.js'
 
 export const normalizeIncident = (raw, city) => {
@@ -27,9 +27,12 @@ export const normalizeIncident = (raw, city) => {
     neighborhood = getChicagoNeighborhood(neighborhood)
   }
 
+  const type = normalizeType(raw[f.type])
+
   return {
     id: raw[f.id] || String(Math.random()),
-    type: normalizeType(raw[f.type]),
+    type,
+    severity: getSeverity(type),
     rawType: raw[f.type] || '',
     description: raw[f.description] || '',
     lat,

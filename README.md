@@ -38,14 +38,17 @@ CrimeScope is a front-end crime data visualization app that pulls live incident 
 
 **Features**
 
-- Interactive Leaflet map with pin, cluster, and heatmap view modes
+- Interactive Leaflet map with cluster and heatmap view modes
 - Live data from Chicago, NYC, Los Angeles, San Francisco, Dallas, and Detroit
+- Severity-based color system — incidents grouped into Violent, Property, Narcotics, Quality of Life, and Other, each with a distinct color on pins and clusters
+- Cluster circles colored by dominant severity in that area
 - City-aware date anchoring — portals that lag months behind auto-adjust so filters always work
-- Filter by crime category and hour of day
+- Filter by severity category, drill into specific crime types via accordion dropdown, and filter by hour of day with a visual time range bar and quick presets (All / AM / PM / Night)
+- Click any map pin to open an incident detail card; click anywhere on the map to dismiss it
 - Collapsible sidebar with hamburger toggle — hides on demand to maximize map space
-- Mobile-responsive layout with sidebar as a slide-in overlay drawer on small screens
-- Sidebar with incident count, crime type breakdown chart, and neighborhood stats
-- Click any incident for a detail card: type, description, address, date/time, case number
+- Full mobile layout: sidebar slides in as an overlay drawer, city selector and date range move into the Filters tab, navbar shows only the logo and live incident count
+- Sidebar Stats tab with total count, crime type breakdown, and top neighborhoods
+- Sidebar Chart tab with a bar chart of incidents by type
 - Stale data indicator when a city portal is behind real time
 
 ---
@@ -98,12 +101,14 @@ No backend or API key required. All data comes from free public city portals.
 
 ## Usage
 
-- Select a city from the search bar in the navbar
+- Select a city from the navbar (desktop) or the Filters tab (mobile)
 - Use the **14d / 30d / 60d** presets to control the date window
-- Toggle between **Pins**, **Clusters**, and **Heatmap** in the sidebar
-- Filter incidents by crime type or drag the hour sliders to narrow by time of day
-- Click any map pin to open the incident detail card
-- The sidebar shows total counts, a type breakdown chart, and top neighborhoods
+- Toggle **Heatmap** mode at the bottom of the sidebar
+- Filter by severity (Violent / Property / Narcotics / Quality of Life / Other) — click the arrow on any category to drill into specific crime types
+- Drag the **Hour of Day** sliders or tap a quick preset (All / AM / PM / Night) to filter by time
+- Click any map pin to open the incident detail card; click the map background to close it
+- The **Stats** tab shows total count, crime type breakdown, and top neighborhoods
+- The **Chart** tab shows a ranked bar chart of incidents by type
 
 **Notes**
 

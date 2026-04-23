@@ -1,81 +1,56 @@
-export const CRIME_COLORS = {
-  // Violent
-  'HOMICIDE': '#cc0000',
-  'MURDER (NON-NEGLIGENT)': '#cc0000',
-  'CRIM SEXUAL ASSAULT': '#cc0066',
-  'CRIMINAL SEXUAL ASSAULT': '#cc0066',
-  'SEXUAL ASSAULT': '#cc0066',
-  'RAPE': '#cc0066',
-  'ASSAULT': '#ff3333',
-  'AGGRAVATED ASSAULT': '#ff3333',
-  'BATTERY': '#ff4444',
-  'AGGRAVATED BATTERY': '#ff4444',
-  'ROBBERY': '#ff6600',
-  'KIDNAPPING': '#990000',
+export const SEVERITY_COLORS = {
+  'VIOLENT':          '#e53e3e',
+  'PROPERTY':         '#ed8936',
+  'NARCOTICS':        '#38a169',
+  'QUALITY OF LIFE':  '#4299e1',
+  'OTHER':            '#718096',
+}
 
-  // Property
-  'BURGLARY': '#ffaa00',
-  'THEFT': '#3399ff',
-  'MOTOR VEHICLE THEFT': '#6633cc',
-  'LARCENY': '#3399ff',
-  'ARSON': '#ff8800',
-  'CRIMINAL DAMAGE': '#cc8800',
-  'VANDALISM': '#cc8800',
+const VIOLENT_PATTERNS = [
+  'homicide', 'murder', 'manslaughter', 'assault', 'battery',
+  'robbery', 'rape', 'sexual', 'kidnap', 'stalk', 'shooting',
+  'threat', 'intimidat', 'domestic',
+]
 
-  // Other
-  'NARCOTICS': '#33aa33',
-  'DRUG OFFENSES': '#33aa33',
-  'WEAPONS VIOLATION': '#aa6600',
-  'WEAPONS OFFENSES': '#aa6600',
-  'PROSTITUTION': '#aa3399',
-  'STALKING': '#884400',
-  'DECEPTIVE PRACTICE': '#666699',
-  'FRAUD': '#666699',
-  'OTHER': '#666666',
-  'OTHER OFFENSE': '#666666',
-  'MISCELLANEOUS': '#666666',
+const PROPERTY_PATTERNS = [
+  'theft', 'burglary', 'larceny', 'motor vehicle', 'arson',
+  'damage', 'vandal', 'trespass', 'shoplifting', 'stolen',
+  'embezzl', 'extort', 'forgery', 'counterfeit',
+]
+
+const NARCOTICS_PATTERNS = [
+  'narcotic', 'drug', 'marijuana', 'cannabis', 'cocaine', 'heroin',
+  'methamphet', 'paraphernalia', 'controlled substance', 'possession of',
+]
+
+const QOL_PATTERNS = [
+  'weapon', 'fraud', 'deceptive', 'prostitut', 'peace', 'liquor',
+  'obscen', 'gambling', 'concealed', 'interference', 'disorder',
+  'loiter', 'sex offense', 'child', 'juvenile', 'public',
+]
+
+export function getSeverity(type) {
+  if (!type) return 'OTHER'
+  const t = type.toLowerCase()
+  if (VIOLENT_PATTERNS.some(p => t.includes(p))) return 'VIOLENT'
+  if (NARCOTICS_PATTERNS.some(p => t.includes(p))) return 'NARCOTICS'
+  if (PROPERTY_PATTERNS.some(p => t.includes(p))) return 'PROPERTY'
+  if (QOL_PATTERNS.some(p => t.includes(p))) return 'QUALITY OF LIFE'
+  return 'OTHER'
 }
 
 export const getCrimeColor = (type) =>
-  CRIME_COLORS[type?.toUpperCase()] || CRIME_COLORS['OTHER']
+  SEVERITY_COLORS[getSeverity(type)] ?? SEVERITY_COLORS['OTHER']
 
 export const CRIME_CATEGORIES = [
-  { label: 'Homicide', key: 'HOMICIDE', color: '#cc0000' },
-  { label: 'Sexual Assault', key: 'SEXUAL ASSAULT', color: '#cc0066' },
-  { label: 'Assault / Battery', key: 'ASSAULT', color: '#ff3333' },
-  { label: 'Robbery', key: 'ROBBERY', color: '#ff6600' },
-  { label: 'Burglary', key: 'BURGLARY', color: '#ffaa00' },
-  { label: 'Theft', key: 'THEFT', color: '#3399ff' },
-  { label: 'Motor Vehicle Theft', key: 'MOTOR VEHICLE THEFT', color: '#6633cc' },
-  { label: 'Narcotics', key: 'NARCOTICS', color: '#33aa33' },
-  { label: 'Weapons', key: 'WEAPONS VIOLATION', color: '#aa6600' },
-  { label: 'Arson', key: 'ARSON', color: '#ff8800' },
-  { label: 'Other', key: 'OTHER', color: '#666666' },
+  { label: 'Violent',         key: 'VIOLENT',         color: SEVERITY_COLORS['VIOLENT'] },
+  { label: 'Property',        key: 'PROPERTY',        color: SEVERITY_COLORS['PROPERTY'] },
+  { label: 'Narcotics',       key: 'NARCOTICS',       color: SEVERITY_COLORS['NARCOTICS'] },
+  { label: 'Quality of Life', key: 'QUALITY OF LIFE', color: SEVERITY_COLORS['QUALITY OF LIFE'] },
+  { label: 'Other',           key: 'OTHER',           color: SEVERITY_COLORS['OTHER'] },
 ]
-
-export const CRIME_TYPE_GROUPS = {
-  'HOMICIDE': 'HOMICIDE',
-  'MURDER (NON-NEGLIGENT)': 'HOMICIDE',
-  'CRIM SEXUAL ASSAULT': 'SEXUAL ASSAULT',
-  'CRIMINAL SEXUAL ASSAULT': 'SEXUAL ASSAULT',
-  'RAPE': 'SEXUAL ASSAULT',
-  'ASSAULT': 'ASSAULT',
-  'AGGRAVATED ASSAULT': 'ASSAULT',
-  'BATTERY': 'ASSAULT',
-  'AGGRAVATED BATTERY': 'ASSAULT',
-  'ROBBERY': 'ROBBERY',
-  'BURGLARY': 'BURGLARY',
-  'THEFT': 'THEFT',
-  'LARCENY': 'THEFT',
-  'MOTOR VEHICLE THEFT': 'MOTOR VEHICLE THEFT',
-  'NARCOTICS': 'NARCOTICS',
-  'DRUG OFFENSES': 'NARCOTICS',
-  'WEAPONS VIOLATION': 'WEAPONS VIOLATION',
-  'WEAPONS OFFENSES': 'WEAPONS VIOLATION',
-  'ARSON': 'ARSON',
-}
 
 export const normalizeType = (type) => {
   if (!type) return 'OTHER'
-  return CRIME_TYPE_GROUPS[type.toUpperCase()] || type.toUpperCase()
+  return type.toUpperCase()
 }

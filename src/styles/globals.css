@@ -12,9 +12,8 @@
   --text: #e8e8e8;
   --text-muted: #888888;
   --accent: #ffffff;
-  --navbar-h: 52px;
-  --sidebar-w: 260px;
-  --statsbar-h: 36px;
+  --navbar-h: 64px;
+  --sidebar-w: 300px;
 }
 
 html, body, #root {
@@ -105,13 +104,23 @@ input, select {
   z-index: 60;
 }
 
+/* Filter items — hidden by default, shown only on mobile */
+.filter-mobile-only {
+  display: none;
+}
+
+/* Mobile count hidden on desktop */
+.nav-count-mobile {
+  display: none;
+}
+
 /* Mobile */
 @media (max-width: 768px) {
   .sidebar {
     position: fixed;
     left: 0;
     top: var(--navbar-h);
-    height: calc(100% - var(--navbar-h) - var(--statsbar-h));
+    height: calc(100% - var(--navbar-h));
     z-index: 50;
     width: var(--sidebar-w);
     transform: translateX(0);
@@ -138,12 +147,33 @@ input, select {
   .nav-date-range,
   .nav-stale,
   .nav-divider-hide,
-  .nav-count {
+  .nav-city,
+  .nav-city-divider,
+  .nav-presets,
+  .nav-spacer,
+  .nav-count-desktop {
     display: none !important;
   }
 
+  /* CrimeScope fills the middle on mobile */
+  .nav-title {
+    flex: 1;
+    text-align: center;
+    margin: 0 !important;
+    font-size: 20px !important;
+  }
+
+  /* Show filter mobile-only sections on mobile */
+  .filter-mobile-only {
+    display: block;
+  }
+
+  .nav-count-mobile {
+    display: inline;
+  }
+
   .navbar {
-    padding: 0 10px !important;
+    padding: 0 12px !important;
     gap: 0;
   }
 }

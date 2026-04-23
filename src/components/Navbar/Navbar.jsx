@@ -38,64 +38,67 @@ export default function Navbar({ onToggleSidebar, sidebarOpen }) {
       <button
         onClick={onToggleSidebar}
         style={{
-          width: '32px',
-          height: '32px',
+          width: '38px',
+          height: '38px',
           border: '1px solid var(--border)',
-          borderRadius: '4px',
+          borderRadius: '6px',
           background: 'transparent',
           color: 'var(--text-muted)',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          gap: '4px',
-          padding: '6px',
+          gap: '5px',
+          padding: '8px',
           flexShrink: 0,
-          marginRight: '12px',
+          marginRight: '16px',
         }}
         title={sidebarOpen ? 'Hide sidebar' : 'Show sidebar'}
       >
-        <span style={{ display: 'block', width: '14px', height: '1.5px', background: 'currentColor', borderRadius: '1px' }} />
-        <span style={{ display: 'block', width: '14px', height: '1.5px', background: 'currentColor', borderRadius: '1px' }} />
-        <span style={{ display: 'block', width: '14px', height: '1.5px', background: 'currentColor', borderRadius: '1px' }} />
+        <span style={{ display: 'block', width: '16px', height: '1.5px', background: 'currentColor', borderRadius: '1px' }} />
+        <span style={{ display: 'block', width: '16px', height: '1.5px', background: 'currentColor', borderRadius: '1px' }} />
+        <span style={{ display: 'block', width: '16px', height: '1.5px', background: 'currentColor', borderRadius: '1px' }} />
       </button>
 
       <button
+        className="nav-title"
         onClick={triggerRecenter}
         title="Re-center map"
-        style={{ fontWeight: 700, fontSize: '14px', letterSpacing: '-0.3px', color: '#fff', marginRight: '16px', whiteSpace: 'nowrap', background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}
+        style={{ fontWeight: 800, fontSize: '30px', letterSpacing: '-1px', color: '#fff', marginRight: '16px', whiteSpace: 'nowrap', background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}
       >
         Crime<span style={{ color: '#ff3333' }}>Scope</span>
       </button>
 
-      <Divider />
+      <Divider className="nav-city-divider" />
 
-      <div style={{ margin: '0 12px' }}>
+      <div className="nav-city" style={{ margin: '0 12px' }}>
         <CitySearch />
       </div>
 
-      <Divider />
+      <Divider className="nav-city-divider" />
 
-      {PRESETS.map(p => (
-        <button key={p.label}
-          onClick={() => setDateRange({ start: subDays(refDate, p.days), end: refDate })}
-          style={{
-            padding: '0 10px',
-            height: 'var(--navbar-h)',
-            border: 'none',
-            borderBottom: activePreset?.days === p.days ? '2px solid #fff' : '2px solid transparent',
-            background: 'transparent',
-            color: activePreset?.days === p.days ? '#fff' : 'var(--text-muted)',
-            fontSize: '12px',
-            fontWeight: activePreset?.days === p.days ? 600 : 400,
-            cursor: 'pointer',
-            flexShrink: 0,
-          }}>
-          {p.label}
-        </button>
-      ))}
+      <div className="nav-presets" style={{ display: 'flex' }}>
+        {PRESETS.map(p => (
+          <button key={p.label}
+            onClick={() => setDateRange({ start: subDays(refDate, p.days), end: refDate })}
+            style={{
+              padding: '0 14px',
+              height: 'var(--navbar-h)',
+              border: 'none',
+              borderBottom: activePreset?.days === p.days ? '2px solid #fff' : '2px solid transparent',
+              background: 'transparent',
+              color: activePreset?.days === p.days ? '#fff' : 'var(--text-muted)',
+              fontSize: '14px',
+              fontWeight: activePreset?.days === p.days ? 600 : 400,
+              cursor: 'pointer',
+              flexShrink: 0,
+            }}>
+            {p.label}
+          </button>
+        ))}
+      </div>
 
-      <div style={{ flex: 1 }} />
+      <div className="nav-spacer" style={{ flex: 1 }} />
 
       {isStale && (
         <span className="nav-stale" style={{ fontSize: '10px', color: '#f90', marginRight: '12px', whiteSpace: 'nowrap' }}>
@@ -103,19 +106,22 @@ export default function Navbar({ onToggleSidebar, sidebarOpen }) {
         </span>
       )}
 
-      <span className="nav-date-range" style={{ fontSize: '11px', color: 'var(--text-muted)', marginRight: '16px', whiteSpace: 'nowrap' }}>
+      <span className="nav-date-range" style={{ fontSize: '13px', color: 'var(--text-muted)', marginRight: '20px', whiteSpace: 'nowrap' }}>
         {format(dateRange.start, 'MMM d')} – {format(dateRange.end, 'MMM d')}
       </span>
 
       <Divider className="nav-divider-hide" />
 
-      <span className="nav-count" style={{ fontSize: '12px', color: loading ? 'var(--text-muted)' : '#fff', marginLeft: '12px', whiteSpace: 'nowrap' }}>
+      <span className="nav-count-desktop" style={{ fontSize: '14px', color: loading ? 'var(--text-muted)' : '#fff', marginLeft: '16px', whiteSpace: 'nowrap' }}>
         {loading ? '...' : `${count.toLocaleString()} incidents`}
+      </span>
+      <span className="nav-count-mobile" style={{ fontSize: '12px', color: loading ? 'var(--text-muted)' : '#fff', whiteSpace: 'nowrap' }}>
+        {loading ? '...' : count.toLocaleString()}
       </span>
     </nav>
   )
 }
 
 function Divider({ className = '' }) {
-  return <div className={className} style={{ width: '1px', height: '16px', background: 'var(--border)', margin: '0 8px' }} />
+  return <div className={className} style={{ width: '1px', height: '20px', background: 'var(--border)', margin: '0 12px' }} />
 }

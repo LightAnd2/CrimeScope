@@ -23,7 +23,7 @@ export default function Charts() {
 
   return (
     <div>
-      <div style={{ fontSize: '10px', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '12px' }}>
+      <div style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '14px' }}>
         Incidents by Type
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '7px' }}>
@@ -32,11 +32,11 @@ export default function Charts() {
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '3px', alignItems: 'center' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px', minWidth: 0 }}>
                 <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: color, flexShrink: 0 }} />
-                <span style={{ fontSize: '11px', color: 'var(--text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                <span style={{ fontSize: '13px', color: 'var(--text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                   {type}
                 </span>
               </div>
-              <span style={{ fontSize: '11px', color: 'var(--text-muted)', flexShrink: 0, marginLeft: '6px' }}>
+              <span style={{ fontSize: '13px', color: 'var(--text-muted)', flexShrink: 0, marginLeft: '8px' }}>
                 {count.toLocaleString()}
               </span>
             </div>

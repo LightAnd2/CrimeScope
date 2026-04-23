@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react'
 import { useMap } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet.markercluster'
-import { getCrimeColor } from '../../constants/crimeTypes.js'
+import { SEVERITY_COLORS } from '../../constants/crimeTypes.js'
 import useCrimeStore from '../../store/crimeStore.js'
 
 const iconCache = {}
@@ -29,6 +29,30 @@ export default function ClusterLayer({ incidents }) {
         maxClusterRadius: 50,
         animate: true,
         animateAddingMarkers: false,
+        iconCreateFunction: (cluster) => {
+          const children = cluster.getAllChildMarkers()
+          const counts = {}
+          children.forEach(m => {
+            const sev = m.options.severity || 'OTHER'
+            counts[sev] = (counts[sev] || 0) + 1
+          })
+          const dominant = Object.entries(counts).sort((a, b) => b[1] - a[1])[0]?.[0] || 'OTHER'
+          const color = SEVERITY_COLORS[dominant] || '#718096'
+          const count = children.length
+          const size = count < 10 ? 28 : count < 100 ? 34 : 40
+          return L.divIcon({
+            html: `<div style="
+              width:${size}px;height:${size}px;border-radius:50%;
+              background:${color}22;
+              border:2px solid ${color};
+              color:#fff;font-size:11px;font-weight:700;
+              display:flex;align-items:center;justify-content:center;
+            ">${count}</div>`,
+            className: '',
+            iconSize: [size, size],
+            iconAnchor: [size / 2, size / 2],
+          })
+        },
       })
       map.addLayer(clusterRef.current)
     }
@@ -37,8 +61,8 @@ export default function ClusterLayer({ incidents }) {
     cluster.clearLayers()
 
     const markers = incidents.map(incident => {
-      const color = getCrimeColor(incident.type)
-      const marker = L.marker([incident.lat, incident.lng], { icon: getIcon(color) })
+      const color = SEVERITY_COLORS[incident.severity] ?? '#718096'
+      const marker = L.marker([incident.lat, incident.lng], { icon: getIcon(color), severity: incident.severity })
       marker.on('click', () => selectIncident(incident))
       return marker
     })

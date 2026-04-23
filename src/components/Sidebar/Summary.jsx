@@ -36,8 +36,8 @@ export default function Summary() {
         {stats.byType.map(([type, count]) => (
           <div key={type} style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px' }}>
             <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: getCrimeColor(type), flexShrink: 0 }} />
-            <span style={{ flex: 1, fontSize: '11px', color: 'var(--text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{type}</span>
-            <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>{count.toLocaleString()}</span>
+            <span style={{ flex: 1, fontSize: '13px', color: 'var(--text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{type}</span>
+            <span style={{ fontSize: '13px', color: 'var(--text-muted)' }}>{count.toLocaleString()}</span>
           </div>
         ))}
       </div>
@@ -46,8 +46,8 @@ export default function Summary() {
         <SectionLabel>Top Neighborhoods</SectionLabel>
         {stats.byNeighborhood.map(([n, count]) => (
           <div key={n} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
-            <span style={{ fontSize: '11px', color: 'var(--text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '70%' }}>{n}</span>
-            <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>{count.toLocaleString()}</span>
+            <span style={{ fontSize: '13px', color: 'var(--text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '70%' }}>{n}</span>
+            <span style={{ fontSize: '13px', color: 'var(--text-muted)' }}>{count.toLocaleString()}</span>
           </div>
         ))}
       </div>
@@ -57,16 +57,16 @@ export default function Summary() {
 
 function Row({ label, value }) {
   return (
-    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
-      <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{label}</span>
-      <span style={{ fontSize: '12px', color: '#fff', fontWeight: 600 }}>{value}</span>
+    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
+      <span style={{ fontSize: '14px', color: 'var(--text-muted)' }}>{label}</span>
+      <span style={{ fontSize: '14px', color: '#fff', fontWeight: 600 }}>{value}</span>
     </div>
   )
 }
 
 function SectionLabel({ children }) {
   return (
-    <div style={{ fontSize: '10px', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '6px' }}>
+    <div style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '8px' }}>
       {children}
     </div>
   )

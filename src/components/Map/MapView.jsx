@@ -1,10 +1,16 @@
 import React, { useEffect, useRef } from 'react'
-import { MapContainer, TileLayer, useMap } from 'react-leaflet'
+import { MapContainer, TileLayer, useMap, useMapEvents } from 'react-leaflet'
 import ClusterLayer from './ClusterLayer.jsx'
 import HeatmapLayer from './HeatmapLayer.jsx'
 import { useCrimeData } from '../../hooks/useCrimeData.js'
 import useCrimeStore from '../../store/crimeStore.js'
 import { CITIES } from '../../constants/cities.js'
+
+function MapClickHandler() {
+  const clearSelectedIncident = useCrimeStore(s => s.clearSelectedIncident)
+  useMapEvents({ click: () => clearSelectedIncident() })
+  return null
+}
 
 function MapController() {
   const map = useMap()
@@ -51,6 +57,7 @@ export default function MapView() {
         maxZoom={19}
       />
       <MapController />
+      <MapClickHandler />
       {viewMode === 'pins' && <ClusterLayer incidents={incidents} />}
       {viewMode === 'heatmap' && <HeatmapLayer incidents={incidents} />}
     </MapContainer>

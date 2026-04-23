@@ -10,7 +10,8 @@ const useCrimeStore = create((set) => ({
     end: new Date(),
   },
   filters: {
-    types: [],
+    types: [],        // severity buckets
+    specificTypes: [], // granular type override
     timeRange: [0, 23],
   },
   viewMode: 'pins',

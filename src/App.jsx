@@ -4,7 +4,6 @@ import Navbar from './components/Navbar/Navbar.jsx'
 import Sidebar from './components/Sidebar/Sidebar.jsx'
 import MapView from './components/Map/MapView.jsx'
 import CrimeDetail from './components/CrimeDetail/CrimeDetail.jsx'
-import StatsBar from './components/UI/StatsBar.jsx'
 import useCrimeStore from './store/crimeStore.js'
 
 export default function App() {
@@ -23,12 +22,11 @@ export default function App() {
             onClick={() => setSidebarOpen(false)}
           />
         )}
-        <div style={{ flex: 1, position: 'relative' }}>
+        <div style={{ flex: 1, position: 'relative', isolation: 'isolate' }}>
           <MapView />
           {selectedIncident && <CrimeDetail />}
         </div>
       </div>
-      <StatsBar />
       <Analytics />
     </div>
   )
