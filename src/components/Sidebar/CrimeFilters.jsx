@@ -17,8 +17,14 @@ const TIME_PRESETS = [
   { label: 'Night', range: [18, 23] },
 ]
 
-const fmtHour = (h) =>
-  h === 0 ? '12 AM' : h < 12 ? `${h} AM` : h === 12 ? '12 PM' : `${h - 12} PM`
+// Convert 24h (0-23) to { h: 1-12, pm: bool }
+const to12 = (h24) => ({ h: h24 % 12 || 12, pm: h24 >= 12 })
+// Convert 12h + am/pm to 24h (0-23)
+const to24 = (h12, pm) => {
+  if (pm  && h12 < 12) return h12 + 12
+  if (!pm && h12 === 12) return 0
+  return h12
+}
 
 export default function CrimeFilters() {
   const filters = useCrimeStore(s => s.filters)
@@ -228,55 +234,71 @@ export default function CrimeFilters() {
           Hour of Day
         </span>
 
-        {/* Visual track bar */}
-        <div style={{ position: 'relative', height: '4px', background: 'var(--border)', borderRadius: '2px', margin: '4px 0 6px' }}>
-          <div style={{
-            position: 'absolute',
-            left: `${(filters.timeRange[0] / 23) * 100}%`,
-            width: `${((filters.timeRange[1] - filters.timeRange[0]) / 23) * 100}%`,
-            top: 0, bottom: 0,
-            background: '#fff',
-            borderRadius: '2px',
-          }} />
-        </div>
-
-        {/* Tick labels */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: 'var(--text-muted)', marginBottom: '10px' }}>
-          <span>12a</span><span>6a</span><span>12p</span><span>6p</span><span>11p</span>
-        </div>
-
-        {/* From / To sliders */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginBottom: '10px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span style={{ fontSize: '12px', color: 'var(--text-muted)', width: '28px', flexShrink: 0 }}>from</span>
-            <input
-              type="range" min={0} max={23}
-              value={filters.timeRange[0]}
-              onChange={e => {
-                const val = +e.target.value
-                setFilter('timeRange', [Math.min(val, filters.timeRange[1]), filters.timeRange[1]])
-              }}
-              style={{ flex: 1, accentColor: '#fff' }}
-            />
-            <span style={{ fontSize: '12px', color: '#fff', width: '42px', textAlign: 'right', flexShrink: 0 }}>
-              {fmtHour(filters.timeRange[0])}
-            </span>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span style={{ fontSize: '12px', color: 'var(--text-muted)', width: '28px', flexShrink: 0 }}>to</span>
-            <input
-              type="range" min={0} max={23}
-              value={filters.timeRange[1]}
-              onChange={e => {
-                const val = +e.target.value
-                setFilter('timeRange', [filters.timeRange[0], Math.max(val, filters.timeRange[0])])
-              }}
-              style={{ flex: 1, accentColor: '#fff' }}
-            />
-            <span style={{ fontSize: '12px', color: '#fff', width: '42px', textAlign: 'right', flexShrink: 0 }}>
-              {fmtHour(filters.timeRange[1])}
-            </span>
-          </div>
+        {/* From / To — 12-hour inputs */}
+        <div style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
+          {[
+            { label: 'From', key: 0 },
+            { label: 'To',   key: 1 },
+          ].map(({ label, key }) => {
+            const { h, pm } = to12(filters.timeRange[key])
+            return (
+              <div key={key} style={{ flex: 1 }}>
+                <div style={{ fontSize: '11px', color: 'var(--text-muted)', marginBottom: '4px' }}>{label}</div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                  <input
+                    type="number"
+                    min={1}
+                    max={12}
+                    value={h}
+                    onChange={e => {
+                      let h12 = Math.max(1, Math.min(12, parseInt(e.target.value) || 1))
+                      let val = to24(h12, pm)
+                      if (key === 0) val = Math.min(val, filters.timeRange[1])
+                      else          val = Math.max(val, filters.timeRange[0])
+                      const next = [...filters.timeRange]
+                      next[key] = val
+                      setFilter('timeRange', next)
+                    }}
+                    style={{
+                      width: '44px',
+                      padding: '5px 4px',
+                      background: 'var(--surface2)',
+                      border: '1px solid var(--border)',
+                      borderRadius: '4px',
+                      color: '#fff',
+                      fontSize: '13px',
+                      fontWeight: 600,
+                      textAlign: 'center',
+                      outline: 'none',
+                    }}
+                  />
+                  <button
+                    onClick={() => {
+                      let val = to24(h, !pm)
+                      if (key === 0) val = Math.min(val, filters.timeRange[1])
+                      else          val = Math.max(val, filters.timeRange[0])
+                      const next = [...filters.timeRange]
+                      next[key] = val
+                      setFilter('timeRange', next)
+                    }}
+                    style={{
+                      padding: '5px 6px',
+                      background: 'var(--surface2)',
+                      border: '1px solid var(--border)',
+                      borderRadius: '4px',
+                      color: '#fff',
+                      fontSize: '11px',
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                      whiteSpace: 'nowrap',
+                    }}
+                  >
+                    {pm ? 'PM' : 'AM'}
+                  </button>
+                </div>
+              </div>
+            )
+          })}
         </div>
 
         {/* Quick presets */}

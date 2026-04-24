@@ -43,6 +43,10 @@ export const normalizeIncident = (raw, city) => {
     // GeoJSON Point: { coordinates: [lng, lat] }
     lat = raw[f.lat]?.coordinates?.[1]
     lng = raw[f.lat]?.coordinates?.[0]
+  } else if (city.coordGeometry) {
+    // ArcGIS geometry with outSR=4326 — x=lng, y=lat merged as _geo_lat/_geo_lng
+    lat = parseFloat(raw._geo_lat)
+    lng = parseFloat(raw._geo_lng)
   } else {
     lat = parseFloat(raw[f.lat])
     lng = parseFloat(raw[f.lng])
