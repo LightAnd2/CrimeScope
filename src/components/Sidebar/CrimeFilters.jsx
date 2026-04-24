@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react'
+import React, { useState, useMemo, useEffect } from 'react'
 import { subDays } from 'date-fns'
 import { CRIME_CATEGORIES } from '../../constants/crimeTypes.js'
 import CitySearch from '../Navbar/CitySearch.jsx'
@@ -11,19 +11,85 @@ const PRESETS = [
 ]
 
 const TIME_PRESETS = [
-  { label: 'All',  range: [0, 23] },
-  { label: 'AM',   range: [5, 11] },
-  { label: 'PM',   range: [12, 17] },
-  { label: 'Night', range: [18, 23] },
+  { label: 'All',   range: [0, 24] },
+  { label: 'AM',    range: [5, 12] },
+  { label: 'PM',    range: [12, 18] },
+  { label: 'Night', range: [18, 24] },
 ]
 
-// Convert 24h (0-23) to { h: 1-12, pm: bool }
-const to12 = (h24) => ({ h: h24 % 12 || 12, pm: h24 >= 12 })
+// Convert 24h (0-24) to { h: 1-12, pm: bool }
+// 24 = "midnight end of day" → displays as 12 AM
+const to12 = (h24) => h24 >= 24
+  ? { h: 12, pm: false }
+  : { h: h24 % 12 || 12, pm: h24 >= 12 }
 // Convert 12h + am/pm to 24h (0-23)
 const to24 = (h12, pm) => {
   if (pm  && h12 < 12) return h12 + 12
   if (!pm && h12 === 12) return 0
   return h12
+}
+
+function HourInput({ value24, onChange }) {
+  const { h, pm } = to12(value24)
+  const [draft, setDraft] = useState(String(h))
+
+  // keep draft in sync if the value changes externally (e.g. preset click)
+  useEffect(() => { setDraft(String(to12(value24).h)) }, [value24])
+
+  const commit = (raw) => {
+    const parsed = parseInt(raw)
+    const clamped = isNaN(parsed) ? h : Math.max(1, Math.min(12, parsed))
+    setDraft(String(clamped))
+    onChange(to24(clamped, pm))
+  }
+
+  const btnStyle = {
+    background: 'var(--surface2)',
+    border: '1px solid var(--border)',
+    borderRadius: '4px',
+    color: '#fff',
+    fontSize: '11px',
+    fontWeight: 600,
+    cursor: 'pointer',
+    padding: '4px 7px',
+    flexShrink: 0,
+  }
+
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: '3px' }}>
+      <input
+        type="text"
+        inputMode="numeric"
+        value={draft}
+        onChange={e => setDraft(e.target.value)}
+        onBlur={e => commit(e.target.value)}
+        onKeyDown={e => {
+          if (e.key === 'Enter') commit(e.target.value)
+          if (e.key === 'ArrowUp')   { e.preventDefault(); commit(String((parseInt(draft) % 12 || 0) + 1 || 1)) }
+          if (e.key === 'ArrowDown') { e.preventDefault(); commit(String(((parseInt(draft) - 2 + 12) % 12) + 1)) }
+        }}
+        onFocus={e => e.target.select()}
+        style={{
+          width: '32px',
+          padding: '4px 2px',
+          background: 'var(--surface2)',
+          border: '1px solid var(--border)',
+          borderRadius: '4px',
+          color: '#fff',
+          fontSize: '13px',
+          fontWeight: 600,
+          textAlign: 'center',
+          outline: 'none',
+        }}
+      />
+      <button
+        style={btnStyle}
+        onClick={() => onChange(to24(h, !pm))}
+      >
+        {pm ? 'PM' : 'AM'}
+      </button>
+    </div>
+  )
 }
 
 export default function CrimeFilters() {
@@ -234,71 +300,24 @@ export default function CrimeFilters() {
           Hour of Day
         </span>
 
-        {/* From / To — 12-hour inputs */}
+        {/* From / To — typeable 12-hour inputs */}
         <div style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
           {[
             { label: 'From', key: 0 },
             { label: 'To',   key: 1 },
-          ].map(({ label, key }) => {
-            const { h, pm } = to12(filters.timeRange[key])
-            return (
-              <div key={key} style={{ flex: 1 }}>
-                <div style={{ fontSize: '11px', color: 'var(--text-muted)', marginBottom: '4px' }}>{label}</div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                  <input
-                    type="number"
-                    min={1}
-                    max={12}
-                    value={h}
-                    onChange={e => {
-                      let h12 = Math.max(1, Math.min(12, parseInt(e.target.value) || 1))
-                      let val = to24(h12, pm)
-                      if (key === 0) val = Math.min(val, filters.timeRange[1])
-                      else          val = Math.max(val, filters.timeRange[0])
-                      const next = [...filters.timeRange]
-                      next[key] = val
-                      setFilter('timeRange', next)
-                    }}
-                    style={{
-                      width: '44px',
-                      padding: '5px 4px',
-                      background: 'var(--surface2)',
-                      border: '1px solid var(--border)',
-                      borderRadius: '4px',
-                      color: '#fff',
-                      fontSize: '13px',
-                      fontWeight: 600,
-                      textAlign: 'center',
-                      outline: 'none',
-                    }}
-                  />
-                  <button
-                    onClick={() => {
-                      let val = to24(h, !pm)
-                      if (key === 0) val = Math.min(val, filters.timeRange[1])
-                      else          val = Math.max(val, filters.timeRange[0])
-                      const next = [...filters.timeRange]
-                      next[key] = val
-                      setFilter('timeRange', next)
-                    }}
-                    style={{
-                      padding: '5px 6px',
-                      background: 'var(--surface2)',
-                      border: '1px solid var(--border)',
-                      borderRadius: '4px',
-                      color: '#fff',
-                      fontSize: '11px',
-                      fontWeight: 600,
-                      cursor: 'pointer',
-                      whiteSpace: 'nowrap',
-                    }}
-                  >
-                    {pm ? 'PM' : 'AM'}
-                  </button>
-                </div>
-              </div>
-            )
-          })}
+          ].map(({ label, key }) => (
+            <div key={key} style={{ flex: 1 }}>
+              <div style={{ fontSize: '11px', color: 'var(--text-muted)', marginBottom: '4px' }}>{label}</div>
+              <HourInput
+                value24={filters.timeRange[key]}
+                onChange={val => {
+                  const next = [...filters.timeRange]
+                  next[key] = val
+                  setFilter('timeRange', next)
+                }}
+              />
+            </div>
+          ))}
         </div>
 
         {/* Quick presets */}

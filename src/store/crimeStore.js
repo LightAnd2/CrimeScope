@@ -4,7 +4,7 @@ import { subDays } from 'date-fns'
 const DEFAULT_FILTERS = {
   types: [],
   specificTypes: [],
-  timeRange: [0, 23],
+  timeRange: [0, 24],
 }
 
 const useCrimeStore = create((set) => ({
