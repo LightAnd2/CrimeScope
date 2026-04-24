@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react'
-import { CITY_LIST } from '../../constants/cities.js'
+import { CITY_GROUPS, CITY_LIST } from '../../constants/cities.js'
 import useCrimeStore from '../../store/crimeStore.js'
 
 export default function CitySearch({ fullWidth = false }) {
@@ -22,27 +22,53 @@ export default function CitySearch({ fullWidth = false }) {
     return () => document.removeEventListener('mousedown', handler)
   }, [])
 
-  const cityList = CITY_LIST.map(c => (
-    <button
-      key={c.id}
-      onClick={() => select(c)}
-      style={{
-        width: '100%',
-        padding: '10px 14px',
-        background: c.id === cityId ? 'var(--surface2)' : 'transparent',
-        border: 'none',
+  const groupedCities = CITY_GROUPS
+    .map(group => ({
+      ...group,
+      cities: CITY_LIST.filter(city => city.freshnessTier === group.id),
+    }))
+    .filter(group => group.cities.length)
+
+  const cityList = groupedCities.map(group => (
+    <div key={group.id}>
+      <div style={{
+        padding: '8px 14px 6px',
+        fontSize: '10px',
+        letterSpacing: '0.08em',
+        textTransform: 'uppercase',
+        color: 'var(--text-muted)',
+        background: 'rgba(255,255,255,0.02)',
         borderBottom: '1px solid var(--border)',
-        color: c.id === cityId ? '#fff' : 'var(--text)',
-        fontSize: '13px',
-        textAlign: 'left',
-        cursor: 'pointer',
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-      }}
-    >
-      <span style={{ fontWeight: c.id === cityId ? 600 : 400 }}>{c.name}</span>
-    </button>
+      }}>
+        {group.label}
+      </div>
+      {group.cities.map(c => (
+        <button
+          key={c.id}
+          onClick={() => select(c)}
+          style={{
+            width: '100%',
+            padding: '10px 14px',
+            background: c.id === cityId ? 'rgba(255, 51, 51, 0.14)' : 'transparent',
+            border: 'none',
+            borderBottom: c.id === cityId ? '1px solid rgba(255, 51, 51, 0.28)' : '1px solid var(--border)',
+            borderLeft: c.id === cityId ? '3px solid #ff3333' : '3px solid transparent',
+            color: c.id === cityId ? '#fff' : 'var(--text)',
+            fontSize: '13px',
+            textAlign: 'left',
+            cursor: 'pointer',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            gap: '10px',
+          }}
+        >
+          <span style={{ fontWeight: c.id === cityId ? 600 : 400 }}>
+            {c.name}, {c.state}
+          </span>
+        </button>
+      ))}
+    </div>
   ))
 
   // Inline mode (sidebar on mobile) — no absolute positioning
@@ -70,7 +96,9 @@ export default function CitySearch({ fullWidth = false }) {
           }}
         >
           <span style={{ width: '16px', flexShrink: 0 }} />
-          <span style={{ flex: 1, textAlign: 'center', fontWeight: 600 }}>{current ? `${current.name}, ${current.state}` : 'Select city'}</span>
+          <span style={{ flex: 1, textAlign: 'center', fontWeight: 600 }}>
+            {current ? `${current.name}, ${current.state}` : 'Select city'}
+          </span>
           <span style={{ fontSize: '10px', color: 'var(--text-muted)', width: '16px', flexShrink: 0, transition: 'transform 0.15s', transform: open ? 'rotate(180deg)' : 'rotate(0deg)', textAlign: 'right' }}>▼</span>
         </button>
         {open && (

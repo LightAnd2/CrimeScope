@@ -1,6 +1,12 @@
 import { create } from 'zustand'
 import { subDays } from 'date-fns'
 
+const DEFAULT_FILTERS = {
+  types: [],
+  specificTypes: [],
+  timeRange: [0, 23],
+}
+
 const useCrimeStore = create((set) => ({
   city: 'chicago',
   selectedIncident: null,
@@ -9,17 +15,21 @@ const useCrimeStore = create((set) => ({
     start: subDays(new Date(), 30),
     end: new Date(),
   },
-  filters: {
-    types: [],        // severity buckets
-    specificTypes: [], // granular type override
-    timeRange: [0, 23],
-  },
+  filters: DEFAULT_FILTERS,
   viewMode: 'pins',
   recenterKey: 0,
+  allIncidents: [],
   incidents: [],
   loading: false,
 
-  setCity: (cityId) => set({ city: cityId, selectedIncident: null, incidents: [], dataAsOf: null }),
+  setCity: (cityId) => set({
+    city: cityId,
+    selectedIncident: null,
+    dataAsOf: null,
+    allIncidents: [],
+    incidents: [],
+    filters: DEFAULT_FILTERS,
+  }),
   triggerRecenter: () => set(s => ({ recenterKey: s.recenterKey + 1 })),
   selectIncident: (incident) => set({ selectedIncident: incident }),
   clearSelectedIncident: () => set({ selectedIncident: null }),
@@ -29,6 +39,7 @@ const useCrimeStore = create((set) => ({
     filters: { ...state.filters, [key]: value },
   })),
   setViewMode: (viewMode) => set({ viewMode }),
+  setAllIncidents: (allIncidents) => set({ allIncidents }),
   setIncidents: (incidents) => set({ incidents }),
   setLoading: (loading) => set({ loading }),
 }))

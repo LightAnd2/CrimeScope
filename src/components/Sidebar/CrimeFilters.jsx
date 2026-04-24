@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react'
 import { subDays } from 'date-fns'
-import { CRIME_CATEGORIES, getSeverity } from '../../constants/crimeTypes.js'
+import { CRIME_CATEGORIES } from '../../constants/crimeTypes.js'
 import CitySearch from '../Navbar/CitySearch.jsx'
 import useCrimeStore from '../../store/crimeStore.js'
 
@@ -23,7 +23,7 @@ const fmtHour = (h) =>
 export default function CrimeFilters() {
   const filters = useCrimeStore(s => s.filters)
   const setFilter = useCrimeStore(s => s.setFilter)
-  const allIncidents = useCrimeStore(s => s.incidents)
+  const allIncidents = useCrimeStore(s => s.allIncidents)
   const dateRange = useCrimeStore(s => s.dateRange)
   const setDateRange = useCrimeStore(s => s.setDateRange)
   const dataAsOf = useCrimeStore(s => s.dataAsOf)

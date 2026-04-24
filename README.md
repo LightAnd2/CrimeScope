@@ -39,7 +39,7 @@ CrimeScope is a front-end crime data visualization app that pulls live incident 
 **Features**
 
 - Interactive Leaflet map with cluster and heatmap view modes
-- Live data from Chicago, NYC, Los Angeles, San Francisco, Dallas, and Detroit
+- Live data from Chicago, Detroit, New York, Los Angeles, San Francisco, Kansas City, Seattle, Dallas, Oakland, Baton Rouge, Denver, and Washington, DC
 - Severity-based color system — incidents grouped into Violent, Property, Narcotics, Quality of Life, and Other, each with a distinct color on pins and clusters
 - Cluster circles colored by dominant severity in that area
 - City-aware date anchoring — portals that lag months behind auto-adjust so filters always work
@@ -61,8 +61,8 @@ CrimeScope is a front-end crime data visualization app that pulls live incident 
 - [Zustand](https://zustand-demo.pmnd.rs/)
 - [Recharts](https://recharts.org/)
 - [date-fns](https://date-fns.org/)
-- [Socrata SODA API](https://dev.socrata.com/) (Chicago, NYC, LA, SF, Dallas)
-- [ArcGIS FeatureServer](https://developers.arcgis.com/) (Detroit)
+- [Socrata SODA API](https://dev.socrata.com/) (Chicago, NYC, LA, SF, Kansas City, Seattle, Dallas, Oakland, Baton Rouge)
+- [ArcGIS FeatureServer](https://developers.arcgis.com/) (Detroit, Denver, Washington, DC)
 
 ---
 
@@ -114,7 +114,7 @@ No backend or API key required. All data comes from free public city portals.
 
 - Data freshness varies by city — NYC and LA portals run several months behind real time; the app detects this automatically and shows an orange "Data as of [date]" indicator
 - Up to 50,000 records are fetched per city and filtered client-side for speed
-- Detroit uses an ArcGIS endpoint; all other cities use the Socrata SODA API
+- Detroit, Denver, and Washington, DC use ArcGIS endpoints; the other cities use the Socrata SODA API
 
 ---
 
@@ -177,6 +177,12 @@ Andrew Koja
 - [NYC Open Data](https://opendata.cityofnewyork.us/)
 - [LA Open Data](https://data.lacity.org/)
 - [SF Open Data](https://data.sfgov.org/)
+- [Kansas City Open Data](https://data.kcmo.org/)
+- [Seattle Open Data](https://data.seattle.gov/)
 - [Dallas Open Data](https://www.dallasopendata.com/)
+- [Oakland Open Data](https://data.oaklandca.gov/)
+- [Baton Rouge Open Data](https://data.brla.gov/)
 - [Detroit Open Data](https://data.detroitmi.gov/)
+- [Denver Crime Information](https://www.denvergov.org/Public-Safety/Police-Department/Crime-Information)
+- [DC Open Data](https://opendata.dc.gov/)
 - [Vite](https://vitejs.dev/)

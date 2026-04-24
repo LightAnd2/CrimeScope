@@ -1,13 +1,13 @@
 import { useEffect, useRef } from 'react'
 import { subDays } from 'date-fns'
 import { CITIES } from '../constants/cities.js'
+import { fetchArcgis } from '../services/arcgis.js'
 import { fetchSoda } from '../services/soda.js'
 import { fetchDetroit } from '../services/detroit.js'
+import { enrichNeighborhoods } from '../services/neighborhoods.js'
 import { normalizeIncident } from '../utils/normalize.js'
 import { applyFilters } from '../utils/filters.js'
 import useCrimeStore from '../store/crimeStore.js'
-
-const STALE_THRESHOLD_DAYS = 10 // if data is older than this, auto-adjust date range
 
 // Compute the effective date range anchored to the latest available data
 const getEffectiveDateRange = (normalized) => {
@@ -22,11 +22,27 @@ export const useCrimeData = () => {
   const cityId = useCrimeStore(s => s.city)
   const dateRange = useCrimeStore(s => s.dateRange)
   const filters = useCrimeStore(s => s.filters)
+  const selectedIncident = useCrimeStore(s => s.selectedIncident)
+  const clearSelectedIncident = useCrimeStore(s => s.clearSelectedIncident)
+  const setAllIncidents = useCrimeStore(s => s.setAllIncidents)
   const setIncidents = useCrimeStore(s => s.setIncidents)
   const setLoading = useCrimeStore(s => s.setLoading)
   const setDataAsOf = useCrimeStore(s => s.setDataAsOf)
   const setDateRange = useCrimeStore(s => s.setDateRange)
   const cache = useRef({})
+
+  const syncFilteredIncidents = (source, activeFilters, activeDateRange) => {
+    const filtered = applyFilters(source, activeFilters, activeDateRange)
+    setAllIncidents(source)
+    setIncidents(filtered)
+
+    if (selectedIncident) {
+      const stillVisible = filtered.some(i =>
+        i.id === selectedIncident.id && i.city === selectedIncident.city
+      )
+      if (!stillVisible) clearSelectedIncident()
+    }
+  }
 
   // Fetch when city changes — no date param, always get most recent data
   useEffect(() => {
@@ -42,9 +58,9 @@ export const useCrimeData = () => {
       if (effectiveDateRange) {
         setDataAsOf(effectiveDateRange.ref)
         setDateRange({ start: effectiveDateRange.start, end: effectiveDateRange.end })
-        setIncidents(applyFilters(cached, filters, effectiveDateRange))
+        syncFilteredIncidents(cached, filters, effectiveDateRange)
       } else {
-        setIncidents(applyFilters(cached, filters, dateRange))
+        syncFilteredIncidents(cached, filters, dateRange)
       }
       return
     }
@@ -55,18 +71,25 @@ export const useCrimeData = () => {
       setLoading(true)
       try {
         let raw
-        if (cityConfig.type === 'arcgis') {
+        if (cityId === 'detroit') {
           raw = await fetchDetroit()
+        } else if (cityConfig.type === 'arcgis') {
+          raw = await fetchArcgis(cityConfig)
         } else {
           raw = await fetchSoda(cityConfig)
         }
 
-        const normalized = raw
+        let normalized = raw
           .map(r => normalizeIncident(r, cityConfig))
           .filter(Boolean)
 
+        if (cityConfig.neighborhoodBoundary) {
+          normalized = await enrichNeighborhoods(normalized, cityConfig)
+        }
+
         if (!cancelled) {
           cache.current[cacheKey] = normalized
+          setAllIncidents(normalized)
 
           // Always reset date range when city loads, relative to data freshness
           const effectiveDateRange = getEffectiveDateRange(normalized)
@@ -75,11 +98,14 @@ export const useCrimeData = () => {
             setDateRange({ start: effectiveDateRange.start, end: effectiveDateRange.end })
           }
 
-          setIncidents(applyFilters(normalized, filters, effectiveDateRange ?? dateRange))
+          syncFilteredIncidents(normalized, filters, effectiveDateRange ?? dateRange)
         }
       } catch (err) {
         console.error(`[${cityId}] fetch error:`, err)
-        if (!cancelled) setIncidents([])
+        if (!cancelled) {
+          setAllIncidents([])
+          setIncidents([])
+        }
       } finally {
         if (!cancelled) setLoading(false)
       }
@@ -93,7 +119,7 @@ export const useCrimeData = () => {
   useEffect(() => {
     const cacheKey = cityId
     if (cache.current[cacheKey]) {
-      setIncidents(applyFilters(cache.current[cacheKey], filters, dateRange))
+      syncFilteredIncidents(cache.current[cacheKey], filters, dateRange)
     }
-  }, [filters, dateRange])
+  }, [cityId, filters, dateRange, selectedIncident])
 }
