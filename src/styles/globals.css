@@ -73,6 +73,10 @@ input, select {
   color: var(--text-muted) !important;
 }
 
+.leaflet-heatmap-layer {
+  pointer-events: none !important;
+}
+
 /* Cluster marker overrides */
 .marker-cluster-small,
 .marker-cluster-medium,

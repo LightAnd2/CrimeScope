@@ -30,6 +30,12 @@ export default function HeatmapLayer({ incidents }) {
         },
       })
       layerRef.current.addTo(map)
+
+      const canvas = layerRef.current._canvas
+      if (canvas) {
+        canvas.style.pointerEvents = 'none'
+        canvas.setAttribute('aria-hidden', 'true')
+      }
     }
 
     return () => {
