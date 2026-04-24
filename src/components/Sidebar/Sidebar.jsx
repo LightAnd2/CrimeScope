@@ -52,62 +52,50 @@ export default function Sidebar({ isOpen, onClose }) {
         ))}
       </div>
 
-      {/* Tab content */}
-      <div style={{ flex: 1, overflowY: 'auto', padding: '12px', display: 'flex', flexDirection: 'column' }}>
-        <div style={{ flex: 1 }}>
-          {tab === 'filters' && <CrimeFilters />}
-          {tab === 'stats' && <Summary />}
-          {tab === 'chart' && <Charts />}
-        </div>
+      {/* Tab content — scrollable */}
+      <div className="sidebar-content" style={{ flex: 1, overflowY: 'auto', minHeight: 0, padding: '12px' }}>
+        {tab === 'filters' && <CrimeFilters />}
+        {tab === 'stats' && <Summary />}
+        {tab === 'chart' && <Charts />}
+      </div>
 
+      {/* Bottom bar — always visible */}
+      <div className="sidebar-footer" style={{ flexShrink: 0, borderTop: '1px solid var(--border)', padding: '10px 12px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
         {currentCity && (
-          <div style={{ paddingTop: '12px', marginTop: '12px', borderTop: '1px solid var(--border)' }}>
-            <div style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              gap: '10px',
-              marginBottom: dataAsOf ? '8px' : '0',
-            }}>
-              <span style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                Source Status
+          <div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '10px', marginBottom: dataAsOf ? '4px' : '0' }}>
+              <span style={{ fontSize: '11px', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                Source
               </span>
-              <span style={{
-                fontSize: '13px',
-                fontWeight: 600,
-                color: '#fff',
-                whiteSpace: 'nowrap',
-              }}>
+              <span style={{ fontSize: '12px', fontWeight: 600, color: '#fff' }}>
                 {currentCity.statusLabel}
               </span>
             </div>
             {dataAsOf && (
               <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px' }}>
-                <span style={{ fontSize: '13px', color: 'var(--text-muted)' }}>Data as of</span>
-                <span style={{ fontSize: '13px', color: '#fff', fontWeight: 600 }}>{format(dataAsOf, 'MMM d, yyyy')}</span>
+                <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Data as of</span>
+                <span style={{ fontSize: '12px', color: '#fff', fontWeight: 600 }}>{format(dataAsOf, 'MMM d, yyyy')}</span>
               </div>
             )}
           </div>
         )}
-
-        {/* Heatmap toggle — sits right below source status */}
-        <div style={{ paddingTop: '12px', marginTop: '12px', borderTop: '1px solid var(--border)' }}>
-          <button
-            onClick={() => setViewMode(viewMode === 'pins' ? 'heatmap' : 'pins')}
-            style={{
-              width: '100%',
-              padding: '8px',
-              border: '1px solid var(--border)',
-              borderRadius: '6px',
-              background: viewMode === 'heatmap' ? '#fff' : 'transparent',
-              color: viewMode === 'heatmap' ? '#111' : 'var(--text)',
-              fontSize: '12px',
-              fontWeight: 500,
-            }}
-          >
-            {viewMode === 'heatmap' ? 'Heatmap ON' : 'Heatmap OFF'}
-          </button>
-        </div>
+        <button
+          className="sidebar-heatmap-toggle"
+          onClick={() => setViewMode(viewMode === 'pins' ? 'heatmap' : 'pins')}
+          style={{
+            width: '100%',
+            padding: '7px',
+            border: '1px solid var(--border)',
+            borderRadius: '6px',
+            background: viewMode === 'heatmap' ? '#fff' : 'transparent',
+            color: viewMode === 'heatmap' ? '#111' : 'var(--text)',
+            fontSize: '12px',
+            fontWeight: 500,
+            cursor: 'pointer',
+          }}
+        >
+          {viewMode === 'heatmap' ? 'Heatmap ON' : 'Heatmap OFF'}
+        </button>
       </div>
     </div>
   )

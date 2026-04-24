@@ -45,7 +45,7 @@ function TrendChart({ incidents }) {
         borderRadius: '6px', padding: '8px 12px', fontSize: '12px',
       }}>
         <div style={{ color: 'var(--text-muted)', marginBottom: '4px' }}>{label}</div>
-        {payload.map(p => p.value > 0 && (
+        {[...payload].sort((a, b) => b.value - a.value).map(p => p.value > 0 && (
           <div key={p.dataKey} style={{ display: 'flex', justifyContent: 'space-between', gap: '12px' }}>
             <span style={{ color: p.fill }}>{p.name}</span>
             <span style={{ color: '#fff', fontWeight: 600 }}>{p.value}</span>
