@@ -333,7 +333,7 @@ export default function CrimeFilters() {
                   padding: '4px 0',
                   border: '1px solid',
                   borderColor: active ? '#fff' : 'var(--border)',
-                  borderRadius: '20px',
+                  borderRadius: '4px',
                   background: active ? '#fff' : 'transparent',
                   color: active ? '#111' : 'var(--text-muted)',
                   fontSize: '12px',

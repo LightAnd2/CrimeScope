@@ -78,7 +78,7 @@ export default function Navbar({ onToggleSidebar, sidebarOpen }) {
       >
         <img
           className="nav-logo"
-          src="/CrimeScope_Logo_Cropped.png"
+          src="/icons/logo.png"
           alt="CrimeScope"
         />
         <span className="nav-logo-text">

@@ -12,7 +12,7 @@
   --text: #e8e8e8;
   --text-muted: #888888;
   --accent: #ffffff;
-  --navbar-h: 78px;
+  --navbar-h: 92px;
   --sidebar-w: 300px;
 }
 
@@ -134,9 +134,9 @@ input, select {
 
 .nav-logo {
   display: block;
-  height: 62px;
+  height: 82px;
   width: auto;
-  max-width: 280px;
+  max-width: 320px;
   object-fit: contain;
 }
 
