@@ -31,6 +31,24 @@ export default function App() {
           {selectedIncident && <CrimeDetail />}
         </div>
       </div>
+      <footer style={{
+        flexShrink: 0,
+        background: 'var(--surface)',
+        borderTop: '1px solid var(--border)',
+        padding: '6px 20px',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        gap: '12px',
+        flexWrap: 'wrap',
+      }}>
+        <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
+          Data sourced from public city open-data portals. For informational use only — not intended for legal, law enforcement, or investigative purposes. Accuracy not guaranteed.
+        </span>
+        <span style={{ fontSize: '11px', color: 'var(--text-muted)', flexShrink: 0 }}>
+          © {new Date().getFullYear()} CrimeScope
+        </span>
+      </footer>
       <Analytics />
     </div>
   )
