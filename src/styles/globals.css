@@ -265,3 +265,28 @@ input, select {
   background: var(--border);
   border-radius: 2px;
 }
+
+:focus-visible { outline: 2px solid #fff !important; outline-offset: 3px; }
+.sidebar-closed { visibility: hidden; }
+.data-status {
+  position: absolute; z-index: 1000; top: 18px; left: 50%; transform: translateX(-50%);
+  width: min(380px, calc(100% - 100px)); padding: 16px; border: 1px solid var(--border);
+  border-radius: 10px; background: var(--surface); box-shadow: 0 8px 30px #0006;
+}
+.data-status p { margin-top: 6px; color: var(--text-muted); }
+.data-status button { margin-top: 12px; padding: 8px 14px; border: 0; border-radius: 5px; }
+@media (min-width: 769px) and (max-width: 1200px) {
+  .nav-logo { max-width: 170px; }
+  .nav-date-range, .nav-stale { display: none; }
+}
+@media (max-width: 768px) {
+  :root { --navbar-h: 64px; --sidebar-w: min(300px, 90vw); }
+  .sidebar-footer { position: static; }
+  .sidebar-content { padding-bottom: 16px !important; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+}
+
+/* Keep the public basemap subdued so incident colors remain readable. */
+.basemap-tiles { filter: brightness(0.45) saturate(0.4); }

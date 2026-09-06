@@ -29,7 +29,7 @@ const to24 = (h12, pm) => {
   return h12
 }
 
-function HourInput({ value24, onChange }) {
+function HourInput({ value24, onChange, label }) {
   const { h, pm } = to12(value24)
   const [draft, setDraft] = useState(String(h))
 
@@ -58,6 +58,7 @@ function HourInput({ value24, onChange }) {
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: '3px' }}>
       <input
+        aria-label={`${label} hour`}
         type="text"
         inputMode="numeric"
         value={draft}
@@ -83,6 +84,7 @@ function HourInput({ value24, onChange }) {
         }}
       />
       <button
+        aria-label={`${label}: switch to ${pm ? "AM" : "PM"}`}
         style={btnStyle}
         onClick={() => onChange(to24(h, !pm))}
       >
@@ -192,6 +194,10 @@ export default function CrimeFilters() {
               {/* Severity row */}
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 <div
+                  role="button"
+                  tabIndex={0}
+                  aria-pressed={isActive}
+                  onKeyDown={e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggleSeverity(cat.key) } }}
                   onClick={() => toggleSeverity(cat.key)}
                   style={{ display: 'flex', alignItems: 'center', gap: '10px', flex: 1, cursor: 'pointer', padding: '7px 0' }}
                 >
@@ -206,6 +212,8 @@ export default function CrimeFilters() {
                 </div>
                 {hasSubtypes && (
                   <button
+                    aria-label={`${isExpanded ? "Collapse" : "Expand"} ${cat.label}`}
+                    aria-expanded={isExpanded}
                     onClick={e => { e.stopPropagation(); toggleExpand(cat.key) }}
                     style={{
                       background: 'none', border: 'none',
@@ -235,6 +243,10 @@ export default function CrimeFilters() {
                     const selected = activeSpecific.includes(type)
                     return (
                       <div
+                        role="button"
+                        tabIndex={0}
+                        aria-pressed={selected}
+                        onKeyDown={e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggleSpecificType(type) } }}
                         key={type}
                         onClick={() => toggleSpecificType(type)}
                         style={{
@@ -309,10 +321,11 @@ export default function CrimeFilters() {
             <div key={key} style={{ flex: 1 }}>
               <div style={{ fontSize: '11px', color: 'var(--text-muted)', marginBottom: '4px' }}>{label}</div>
               <HourInput
+                label={label}
                 value24={filters.timeRange[key]}
                 onChange={val => {
                   const next = [...filters.timeRange]
-                  next[key] = val
+                  next[key] = key === 1 && val === 0 ? 24 : val
                   setFilter('timeRange', next)
                 }}
               />

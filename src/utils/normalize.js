@@ -52,9 +52,10 @@ export const normalizeIncident = (raw, city) => {
     lng = parseFloat(raw[f.lng])
   }
 
-  if (isNaN(lat) || isNaN(lng)) return null
+  if (!Number.isFinite(lat) || !Number.isFinite(lng) || Math.abs(lat) > 90 || Math.abs(lng) > 180 || (lat === 0 && lng === 0)) return null
 
   const rawDate = raw[f.date]
+  if (rawDate == null || rawDate === '') return null
   const date = typeof rawDate === 'number'
     ? new Date(rawDate)
     : new Date(rawDate)
@@ -75,7 +76,7 @@ export const normalizeIncident = (raw, city) => {
   const type = normalizeType(raw[f.type])
 
   return {
-    id: raw[f.id] || String(Math.random()),
+    id: raw[f.id] ?? JSON.stringify([city.id, rawDate, lat, lng, raw[f.type], raw[f.caseNumber]]),
     type,
     severity: getSeverity(type),
     rawType: raw[f.type] || '',

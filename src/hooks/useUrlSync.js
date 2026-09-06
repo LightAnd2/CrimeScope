@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
-import { subDays, differenceInDays } from 'date-fns'
+import { subDays } from 'date-fns'
 import useCrimeStore from '../store/crimeStore.js'
+import { SEVERITY_COLORS } from '../constants/crimeTypes.js'
 import { CITIES } from '../constants/cities.js'
 
 const PRESET_DAYS = [14, 30, 60]
@@ -20,7 +21,7 @@ export function useUrlInit() {
       useCrimeStore.getState().setCity(cityId)
     }
 
-    const days = parseInt(p.get('days'))
+    const days = Number(p.get('days'))
     if (PRESET_DAYS.includes(days)) {
       const ref = useCrimeStore.getState().dataAsOf ?? new Date()
       useCrimeStore.getState().setDateRange({
@@ -31,12 +32,17 @@ export function useUrlInit() {
 
     const types = p.get('types')
     if (types) {
-      useCrimeStore.getState().setFilter('types', types.split(',').filter(Boolean))
+      useCrimeStore.getState().setFilter('types', types.split(',').filter(type => Object.hasOwn(SEVERITY_COLORS, type)))
     }
+
+    const specific = p.get('specific')
+    if (specific) useCrimeStore.getState().setFilter('specificTypes', specific.split(',').filter(Boolean))
 
     const from = p.get('from')
     const to   = p.get('to')
-    if (from !== null && to !== null) {
+    if (from !== null && to !== null && from.trim() && to.trim() &&
+        Number.isInteger(Number(from)) && Number.isInteger(Number(to)) &&
+        Number(from) >= 0 && Number(from) <= 23 && Number(to) >= 0 && Number(to) <= 24) {
       useCrimeStore.getState().setFilter('timeRange', [parseInt(from), parseInt(to)])
     }
 
@@ -56,13 +62,14 @@ export function useUrlSync() {
       p.set('city', state.city)
 
       // days preset or skip (default 30 is implicit)
-      const ref = state.dataAsOf ?? new Date()
-      const days = Math.round(differenceInDays(ref, state.dateRange.start))
+      const days = state.presetDays
       if (PRESET_DAYS.includes(days)) p.set('days', String(days))
 
       if (state.filters.types.length > 0) {
         p.set('types', state.filters.types.join(','))
       }
+
+      if (state.filters.specificTypes.length) p.set('specific', state.filters.specificTypes.join(','))
 
       const [from, to] = state.filters.timeRange
       if (from !== 0 || to !== 24) {
@@ -74,7 +81,9 @@ export function useUrlSync() {
 
       const qs = p.toString()
       const newUrl = qs ? `${window.location.pathname}?${qs}` : window.location.pathname
-      window.history.replaceState(null, '', newUrl)
+      if (newUrl + window.location.hash !== window.location.pathname + window.location.search + window.location.hash) {
+        window.history.replaceState(window.history.state, '', newUrl + window.location.hash)
+      }
     })
   }, [])
 }

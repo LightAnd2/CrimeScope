@@ -36,6 +36,9 @@ export default function Navbar({ onToggleSidebar, sidebarOpen }) {
       flexShrink: 0,
     }}>
       <button
+        aria-label={sidebarOpen ? "Hide sidebar" : "Show sidebar"}
+        aria-expanded={sidebarOpen}
+        aria-controls="crime-sidebar"
         onClick={onToggleSidebar}
         className="nav-hamburger"
         style={{

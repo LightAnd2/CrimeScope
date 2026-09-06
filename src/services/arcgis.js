@@ -1,7 +1,7 @@
 const PAGE_SIZE = 2000
 const DEFAULT_MAX_RECORDS = 10000
 
-export const fetchArcgis = async (city) => {
+export const fetchArcgis = async (city, { signal } = {}) => {
   const all = []
   let offset = 0
   const maxRecords = city.maxRecords ?? DEFAULT_MAX_RECORDS
@@ -11,7 +11,7 @@ export const fetchArcgis = async (city) => {
       where: city.where ?? '1=1',
       outFields: city.outFields,
       f: 'json',
-      resultRecordCount: String(PAGE_SIZE),
+      resultRecordCount: String(Math.min(PAGE_SIZE, maxRecords - all.length)),
       resultOffset: String(offset),
       orderByFields: `${city.orderByField ?? city.dateField} DESC`,
       returnGeometry: city.coordGeometry ? 'true' : 'false',
@@ -21,7 +21,7 @@ export const fetchArcgis = async (city) => {
       params.set('outSR', '4326')
     }
 
-    const res = await fetch(`${city.endpoint}?${params}`)
+    const res = await fetch(`${city.endpoint}?${params}`, { signal })
     if (!res.ok) throw new Error(`${city.name} API error: ${res.status}`)
 
     const data = await res.json()
@@ -39,9 +39,10 @@ export const fetchArcgis = async (city) => {
       all.push(...features.map(f => f.attributes))
     }
 
-    if (features.length < PAGE_SIZE || all.length >= maxRecords) break
-    offset += PAGE_SIZE
+    if ((!data.exceededTransferLimit && features.length < PAGE_SIZE) || all.length >= maxRecords) break
+    if (!features.length) break
+    offset += features.length
   }
 
-  return all
+  return all.slice(0, maxRecords)
 }

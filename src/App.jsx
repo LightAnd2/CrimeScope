@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Analytics } from '@vercel/analytics/react'
 import Navbar from './components/Navbar/Navbar.jsx'
 import Sidebar from './components/Sidebar/Sidebar.jsx'
@@ -14,6 +14,12 @@ export default function App() {
   const selectedIncident = useCrimeStore(s => s.selectedIncident)
   const [sidebarOpen, setSidebarOpen] = useState(() => window.innerWidth > 768)
 
+  useEffect(() => {
+    const close = e => { if (e.key === 'Escape') { setSidebarOpen(false); useCrimeStore.getState().clearSelectedIncident() } }
+    window.addEventListener('keydown', close)
+    return () => window.removeEventListener('keydown', close)
+  }, [])
+
   return (
     <div className="app-shell" style={{ display: 'flex', flexDirection: 'column', height: '100dvh', minHeight: 0 }}>
       <Navbar onToggleSidebar={() => setSidebarOpen(o => !o)} sidebarOpen={sidebarOpen} />
@@ -28,6 +34,7 @@ export default function App() {
         )}
         <div style={{ flex: 1, position: 'relative', isolation: 'isolate' }}>
           <MapView />
+          <DataStatus />
           {selectedIncident && <CrimeDetail />}
         </div>
       </div>
@@ -52,4 +59,14 @@ export default function App() {
       <Analytics />
     </div>
   )
+}
+
+function DataStatus() {
+  const { loading, error, incidents, allIncidents, retry } = useCrimeStore()
+  if (!loading && !error && incidents.length) return null
+  return <div className="data-status" role={error ? 'alert' : 'status'}>
+    <strong>{loading ? 'Loading incidents…' : error ? 'Data unavailable' : 'No incidents to display'}</strong>
+    <p>{loading ? 'Retrieving records from the city data portal.' : error || (allIncidents.length ? 'Try a longer date range or clear the crime and hour filters.' : 'The source returned no usable incident records.')}</p>
+    {error && <button onClick={retry}>Try again</button>}
+  </div>
 }

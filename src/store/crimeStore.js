@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { subDays } from 'date-fns'
+import { subDays, differenceInDays } from 'date-fns'
 
 const DEFAULT_FILTERS = {
   types: [],
@@ -21,19 +21,25 @@ const useCrimeStore = create((set) => ({
   allIncidents: [],
   incidents: [],
   loading: false,
+  error: null,
+  reloadKey: 0,
+  presetDays: 30,
+  retry: () => set(s => ({ reloadKey: s.reloadKey + 1 })),
 
-  setCity: (cityId) => set({
+  setCity: (cityId) => set(s => s.city === cityId ? {} : ({
     city: cityId,
+    error: null,
+    loading: true,
     selectedIncident: null,
     dataAsOf: null,
     allIncidents: [],
     incidents: [],
     filters: DEFAULT_FILTERS,
-  }),
+  })),
   triggerRecenter: () => set(s => ({ recenterKey: s.recenterKey + 1 })),
   selectIncident: (incident) => set({ selectedIncident: incident }),
   clearSelectedIncident: () => set({ selectedIncident: null }),
-  setDateRange: (dateRange) => set({ dateRange }),
+  setDateRange: (dateRange) => set({ dateRange, presetDays: differenceInDays(dateRange.end, dateRange.start) }),
   setDataAsOf: (date) => set({ dataAsOf: date }),
   setFilter: (key, value) => set((state) => ({
     filters: { ...state.filters, [key]: value },

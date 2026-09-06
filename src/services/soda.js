@@ -1,4 +1,4 @@
-export const fetchSoda = async (city) => {
+export const fetchSoda = async (city, { signal } = {}) => {
   const { nullCheck, dateField, fields } = city
 
   const selectFields = [...new Set([
@@ -17,7 +17,7 @@ export const fetchSoda = async (city) => {
     '$select': selectFields,
   })
 
-  const res = await fetch(`${city.endpoint}?${params}`)
+  const res = await fetch(`${city.endpoint}?${params}`, { signal })
   if (!res.ok) throw new Error(`${city.name} API error: ${res.status}`)
   return res.json()
 }

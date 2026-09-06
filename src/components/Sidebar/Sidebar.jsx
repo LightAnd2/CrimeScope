@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
+import React, { useState, lazy, Suspense } from 'react'
 import { format } from 'date-fns'
 import { CITIES } from '../../constants/cities.js'
 import CrimeFilters from './CrimeFilters.jsx'
 import Summary from './Summary.jsx'
-import Charts from './Charts.jsx'
+const Charts = lazy(() => import('./Charts.jsx'))
 import useCrimeStore from '../../store/crimeStore.js'
 
 const TABS = [
@@ -21,7 +21,7 @@ export default function Sidebar({ isOpen, onClose }) {
   const currentCity = CITIES[cityId]
 
   return (
-    <div className={`sidebar${isOpen ? '' : ' sidebar-closed'}`}>
+    <div id="crime-sidebar" inert={isOpen ? undefined : ""} aria-hidden={!isOpen} className={`sidebar${isOpen ? '' : ' sidebar-closed'}`}>
       {/* Tab bar */}
       <div style={{
         display: 'flex',
@@ -56,7 +56,7 @@ export default function Sidebar({ isOpen, onClose }) {
       <div className="sidebar-content" style={{ flex: 1, overflowY: 'auto', minHeight: 0, padding: '12px' }}>
         {tab === 'filters' && <CrimeFilters />}
         {tab === 'stats' && <Summary />}
-        {tab === 'chart' && <Charts />}
+        {tab === 'chart' && <Suspense fallback={<p role="status">Loading chart…</p>}><Charts /></Suspense>}
       </div>
 
       {/* Bottom bar — always visible */}
